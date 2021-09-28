@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# ignore build and bin folder
+/.vs
+/bin
+/build
+/lib
