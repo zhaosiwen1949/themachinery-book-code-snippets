@@ -247,6 +247,7 @@ filter {"platforms:Linux"}
         "unused-local-typedef",         -- We don't always use all typedefs.
         "missing-braces",               -- = {0} is OK.
         "microsoft-anon-tag",           -- Allow anonymous structs.
+        "unused-function",
     }
 
 filter "configurations:Debug"

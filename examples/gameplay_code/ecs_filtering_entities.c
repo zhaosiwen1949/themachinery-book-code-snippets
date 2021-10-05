@@ -110,5 +110,5 @@ TM_DLL_EXPORT void tm_load_plugin(struct tm_api_registry_api *reg, bool load)
 {
     tm_entity_api = tm_get_api(reg, tm_entity_api);
     tm_entity_commands_api = tm_get_api(reg, tm_entity_commands_api);
-    tm_add_or_remove_implementation(reg, load, tm_entity_register_engines_simulation_i, &entity_register_engines_i);
+    tm_add_or_remove_implementation(reg, load, tm_entity_register_engines_simulation_i, &entity_register_engines);
 }
