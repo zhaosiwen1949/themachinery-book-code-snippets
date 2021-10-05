@@ -110,6 +110,17 @@ function example(name,file)
         files {"examples/" .. sn .. "/" ..file..".c"}
 end
 
+function example_all(folder_name,name)
+    local sn = snake_case(folder_name)
+    base(name)
+        location("build/examples/" .. sn .. "/"..name)
+        kind "SharedLib"
+        targetdir "bin/%{cfg.buildcfg}/examples"
+        targetname("tm_"..name)
+        defines {"TM_LINKS_" .. string.upper(sn)}
+        folder{"examples/" .. sn}
+end
+
 
 newoption {
     trigger     = "clang",
@@ -259,7 +270,7 @@ filter "configurations:Release"
     optimize "On"
 
 
-group "plugins"
+group "the_machinery_book"
 example ("truth","create_empty_type")
 example ("truth","create_truth_types")
 example ("truth","access_values")
@@ -276,3 +287,15 @@ example ("gameplay_code","simulation_entry")
 example ("gameplay_code","ecs_system_engine")
 example ("gameplay_code","ecs_component_example")
 example ("gameplay_code","ecs_filtering_entities")
+
+group "tutorials"
+example ("creation_graph","custom_cpu_nodes")
+example ("creation_graph","calling_creation_graph_from_code")
+example ("gameplay_code","example_graph_nodes")
+example ("ui","toolbars_overlays")
+example ("ui","custom_layouts")
+example_all("custom_assets/part_1","part1")
+example_all("custom_assets/part_2","part2")
+example_all("custom_assets/part_3","part3")
+example_all("custom_assets/drag_drop","drag_drop")
+example_all("custom_assets/open_asset","open_asset")
