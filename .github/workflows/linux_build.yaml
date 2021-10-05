@@ -34,3 +34,4 @@ jobs:
         binary_repository: https://ourmachinery.com/releases/2021.9/the-machinery-2021.9-linux.zip
         mode: Plugin
         config: Debug
+        tests: false
