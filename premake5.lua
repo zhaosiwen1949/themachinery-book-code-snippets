@@ -267,3 +267,11 @@ example ("truth","modify_object")
 example ("truth","truth_mixed")
 
 example ("plugins","get_api_demo")
+example ("plugins","my_plugin")
+example ("plugins","static_variable")
+example ("plugins","my_tab")
+
+example ("gameplay_code","simulation_entry")
+example ("gameplay_code","ecs_system_engine")
+example ("gameplay_code","ecs_component_example")
+example ("gameplay_code","ecs_filtering_entities")
