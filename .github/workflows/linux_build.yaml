@@ -1,0 +1,41 @@
+name: Linux Build
+
+on: 
+  push:
+    branches:
+      - master
+
+jobs:
+  test-build:
+    name: Test Samples
+    runs-on: ubuntu-20.04
+    env:
+      TM_LIB_DIR: ${{github.workspace}}/lib
+      TM_SAMPLE_PROJECTS_DIR: ${{github.workspace}}/sample_projects
+      TM_SDK_DIR: ${{github.workspace}}/build/the-machinery
+      TM_OURMACHINERY_COM_DIR: ${{github.workspace}}/doc
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+      with:
+        path: ./
+    - name: Checkout tmbuild-action repo
+      uses: actions/checkout@v2
+      with:
+        path: tmbuild-action
+        repository: simon-ourmachinery/tmbuild-action
+    - name: Update apt
+      run: sudo apt update -y
+    - name: Install xlib dependencies
+      run: sudo apt install -y  xvfb libasound2-dev libxcb-randr0-dev libxcb-util0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-keysyms1-dev libxcb-cursor-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libtinfo5 libminizip1 unzip libxcb-xrm-dev
+    - name: download and install clang and build-essential
+      run:  sudo apt install build-essential lld clang -y
+    - name: set display env
+      run: export DISPLAY=:99.0
+    - name: run tmbuild
+      uses: ./tmbuild-action
+      id: tmbuild
+      with:
+        binary_repository: https://ourmachinery.com/releases/2021.9/the-machinery-2021.9-linux.zip
+        mode: Plugin
+        config: Debug
