@@ -1,6 +1,5 @@
 // beginning of the source file
 static struct tm_the_truth_api *tm_the_truth_api;
-static struct tm_logger_api *tm_logger_api;
 #include <foundation/api_registry.h>
 #include <foundation/the_truth.h>
 #include <foundation/the_truth_types.h>
