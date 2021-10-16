@@ -290,6 +290,7 @@ example ("gameplay_code","ecs_filtering_entities")
 
 group "tutorials"
 example ("creation_graph","custom_cpu_nodes")
+example ("creation_graph","custom_geometry_node")
 example ("creation_graph","calling_creation_graph_from_code")
 example ("gameplay_code","example_graph_nodes")
 example ("ui","toolbars_overlays")
