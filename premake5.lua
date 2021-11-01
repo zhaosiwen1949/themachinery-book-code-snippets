@@ -271,32 +271,37 @@ filter "configurations:Release"
 
 
 group "the_machinery_book"
-example ("truth","create_empty_type")
-example ("truth","create_truth_types")
-example ("truth","access_values")
-example ("truth","create_an_object")
-example ("truth","modify_object")
-example ("truth","truth_mixed")
+    example ("truth","create_empty_type")
+    example ("truth","create_truth_types")
+    example ("truth","access_values")
+    example ("truth","create_an_object")
+    example ("truth","modify_object")
+    example ("truth","truth_mixed")
 
-example ("plugins","get_api_demo")
-example ("plugins","my_plugin")
-example ("plugins","static_variable")
-example ("plugins","my_tab")
+    example ("plugins","get_api_demo")
+    example ("plugins","my_plugin")
+    example ("plugins","static_variable")
+    example ("plugins","my_tab")
 
-example ("gameplay_code","simulation_entry")
-example ("gameplay_code","ecs_system_engine")
-example ("gameplay_code","ecs_component_example")
-example ("gameplay_code","ecs_filtering_entities")
+    example ("gameplay_code","simulation_entry")
+    example ("gameplay_code","ecs_system_engine")
+    example ("gameplay_code","ecs_component_example")
+    example ("gameplay_code","ecs_filtering_entities")
 
 group "tutorials"
-example ("creation_graph","custom_cpu_nodes")
-example ("creation_graph","custom_geometry_node")
-example ("creation_graph","calling_creation_graph_from_code")
-example ("gameplay_code","example_graph_nodes")
-example ("ui","toolbars_overlays")
-example ("ui","custom_layouts")
-example_all("custom_assets/part_1","part1")
-example_all("custom_assets/part_2","part2")
-example_all("custom_assets/part_3","part3")
-example_all("custom_assets/drag_drop","drag_drop")
-example_all("custom_assets/open_asset","open_asset")
+
+    example ("creation_graph","custom_cpu_nodes")
+    example ("creation_graph","custom_geometry_node")
+    example ("creation_graph","calling_creation_graph_from_code")    
+
+    example ("gameplay_code","example_graph_nodes")
+    example ("gameplay_code","tm_graph_component_compile_data_i")
+
+    example ("ui","toolbars_overlays")
+    example ("ui","custom_layouts")
+
+    example_all("custom_assets/part_1","part1")
+    example_all("custom_assets/part_2","part2")
+    example_all("custom_assets/part_3","part3")
+    example_all("custom_assets/drag_drop","drag_drop")
+    example_all("custom_assets/open_asset","open_asset")
