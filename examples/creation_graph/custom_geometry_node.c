@@ -1,7 +1,8 @@
-struct tm_creation_graph_interpreter_api *tm_creation_graph_interpreter_api;
-struct tm_shader_api *tm_shader_api;
-struct tm_shader_repository_api *tm_shader_repository_api;
-struct tm_renderer_api *tm_renderer_api;
+static struct tm_creation_graph_api *tm_creation_graph_api;
+static struct tm_creation_graph_interpreter_api *tm_creation_graph_interpreter_api;
+static struct tm_shader_api *tm_shader_api;
+static struct tm_shader_repository_api *tm_shader_repository_api;
+static struct tm_renderer_api *tm_renderer_api;
 
 #include <foundation/api_registry.h>
 #include <foundation/the_truth_types.h>
@@ -21,7 +22,7 @@ struct tm_renderer_api *tm_renderer_api;
 
 #include <string.h>
 
-#include <plugins/creation_graph/resource_cache_internal.inl>
+#include <plugins/creation_graph/resource_cache.inl>
 
 typedef struct tm_triangle_vertex_t
 {
@@ -146,6 +147,7 @@ static tm_creation_graph_node_type_i triangle_node = {
 
 TM_DLL_EXPORT void load_triangle_geometry(struct tm_api_registry_api *reg, bool load)
 {
+    tm_creation_graph_api = tm_get_api(reg, tm_creation_graph_api);
     tm_creation_graph_interpreter_api = tm_get_api(reg, tm_creation_graph_interpreter_api);
     tm_shader_api = tm_get_api(reg, tm_shader_api);
     tm_shader_repository_api = tm_get_api(reg, tm_shader_repository_api);
