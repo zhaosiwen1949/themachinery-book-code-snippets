@@ -145,7 +145,7 @@ static tm_creation_graph_node_type_i triangle_node = {
     .compile = triangle_node__compile
 };
 
-TM_DLL_EXPORT void load_triangle_geometry(struct tm_api_registry_api *reg, bool load)
+TM_DLL_EXPORT void tm_load_plugin(struct tm_api_registry_api *reg, bool load)
 {
     tm_creation_graph_api = tm_get_api(reg, tm_creation_graph_api);
     tm_creation_graph_interpreter_api = tm_get_api(reg, tm_creation_graph_interpreter_api);
