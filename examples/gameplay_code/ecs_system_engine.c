@@ -10,7 +10,7 @@ static void movement_update(tm_engine_o *inst, tm_engine_update_set_t *data, str
 {
     //...
 }
-
+// #code_snippet_begin(entity_register_engines_i)
 static void entity_register_engines_i(struct tm_entity_context_o *ctx)
 {
 
@@ -18,7 +18,7 @@ static void entity_register_engines_i(struct tm_entity_context_o *ctx)
     tm_component_type_t movement_component = tm_entity_api->lookup_component_type(ctx, TM_TT_TYPE_HASH__MOVEMENT_COMPONENT);
     tm_component_type_t transform_component = tm_entity_api->lookup_component_type(ctx, TM_TT_TYPE_HASH__TRANSFORM_COMPONENT);
     tm_component_type_t mover_component = tm_entity_api->lookup_component_type(ctx, TM_TT_TYPE_HASH__MOVER_COMPONENT);
-
+    // #code_snippet_begin(tm_engine_i)
     const tm_engine_i movement_engine = {
         .ui_name = "movement_engine",
         .hash = TM_STATIC_HASH("movement_engine", 0x336880a23d06646dULL),
@@ -29,7 +29,9 @@ static void entity_register_engines_i(struct tm_entity_context_o *ctx)
         .inst = (tm_engine_o *)ctx,
     };
     tm_entity_api->register_engine(ctx, &movement_engine);
+    // #code_snippet_end(tm_engine_i)
 }
+// #code_snippet_end(entity_register_engines_i)
 
 static void winning_system_update(struct tm_entity_context_o *ctx, tm_entity_system_o *inst, struct tm_entity_commands_o *commands)
 {
@@ -38,6 +40,7 @@ static void winning_system_update(struct tm_entity_context_o *ctx, tm_entity_sys
 
 static void register_or_system_engine(struct tm_entity_context_o *ctx)
 {
+    // #code_snippet_begin(tm_entity_system_i)
     const tm_entity_system_i winning_system = {
         .ui_name = "winning_system_update",
         .hash = TM_STATIC_HASH("winning_system_update", 0x8f8676e599ca5c7aULL),
@@ -46,11 +49,13 @@ static void register_or_system_engine(struct tm_entity_context_o *ctx)
         .exclusive = true,
     };
     tm_entity_api->register_system(ctx, &winning_system);
+    // #code_snippet_end(tm_entity_system_i)
 }
-
+// #code_snippet_begin(tm_load_plugin)
 TM_DLL_EXPORT void tm_load_plugin(struct tm_api_registry_api *reg, bool load)
 {
     tm_entity_api = tm_get_api(reg, tm_entity_api);
     tm_add_or_remove_implementation(reg, load, tm_entity_register_engines_simulation_i, &entity_register_engines_i);
     tm_add_or_remove_implementation(reg, load, tm_entity_register_engines_simulation_i, &register_or_system_engine);
 }
+// #code_snippet_end(tm_load_plugin)

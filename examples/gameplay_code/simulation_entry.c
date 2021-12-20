@@ -48,7 +48,7 @@ void hot_reload(tm_simulation_state_o *state, struct tm_entity_commands_o *comma
 {
     //...
 }
-
+// #code_snippet_begin(simulation_entry_i)
 static tm_simulation_entry_i simulation_entry_i = {
     .id = TM_STATIC_HASH("tm_my_game_simulation_entry", 0x2d5f7dad50097045ULL),
     .display_name = TM_LOCALIZE_LATER("My Game Simulate Entry"),
@@ -57,7 +57,7 @@ static tm_simulation_entry_i simulation_entry_i = {
     .tick = tick,
     .hot_reload = hot_reload,
 };
-
+// #code_snippet_end(simulation_entry_i)
 TM_DLL_EXPORT void tm_load_plugin(struct tm_api_registry_api *reg, bool load)
 {
     tm_localizer_api = tm_get_api(reg, tm_localizer_api);
