@@ -12,7 +12,7 @@ static void create_truth_types(tm_the_truth_o *tt)
 {
     tm_the_truth_api->create_object_type(tt, TM_TT_TYPE__MY_TYPE, 0, 0);
 }
-
+// #code_snippet_begin(access_values)
 void log_with(tm_the_truth_o *tt, tm_tt_id_t my_object)
 {
     const tm_tt_type_t type = tm_tt_type(my_object);
@@ -27,7 +27,7 @@ void log_with(tm_the_truth_o *tt, tm_tt_id_t my_object)
     const float width = tm_the_truth_api->get_float(tt, tm_tt_read(tt, my_object), TM_TT_PROP__RECT__W);
     TM_LOG("the width is %f", width);
 }
-
+// #code_snippet_end(access_values)
 TM_DLL_EXPORT void tm_load_plugin(struct tm_api_registry_api *reg, bool load)
 {
     tm_the_truth_api = tm_get_api(reg, tm_the_truth_api);

@@ -31,14 +31,14 @@ static void movement_update(tm_engine_o *inst, tm_engine_update_set_t *data, str
 {
     //...
 }
-
+// #code_snippet_begin(entity_register_engines)
 static void entity_register_engines(struct tm_entity_context_o *ctx)
 {
 
     tm_component_type_t component_a = tm_entity_api->lookup_component_type(ctx, TM_TT_TYPE_HASH__A_COMPONENT);
     tm_component_type_t component_b = tm_entity_api->lookup_component_type(ctx, TM_TT_TYPE_HASH__B_COMPONENT);
     tm_component_type_t component_d = tm_entity_api->lookup_component_type(ctx, TM_TT_TYPE_HASH__D_COMPONENT);
-
+    // #code_snippet_begin(tm_engine_i)
     const tm_engine_i movement_engine = {
         .ui_name = "movement_engine",
         .hash = TM_STATIC_HASH("movement_engine", 0x336880a23d06646dULL),
@@ -50,9 +50,12 @@ static void entity_register_engines(struct tm_entity_context_o *ctx)
         .update = movement_update,
         .inst = (tm_engine_o *)ctx,
     };
+    // #code_snippet_end(tm_engine_i)
     tm_entity_api->register_engine(ctx, &movement_engine);
 }
+// #code_snippet_end(entity_register_engines)
 
+// #code_snippet_begin(component__create)
 #define TM_TT_TYPE__PLAYER_NO_MOVE_TAG_COMPONENT "tm_player_no_move_t"
 #define TM_TT_TYE_HASH__PLAYER_NO_MOVE_TAG_COMPONENT TM_STATIC_HASH("tm_player_no_move_t", 0xc58cb6ade683ca88ULL)
 static void component__create(struct tm_entity_context_o *ctx)
@@ -63,9 +66,11 @@ static void component__create(struct tm_entity_context_o *ctx)
     };
     tm_entity_api->register_component(ctx, &component);
 }
+// #code_snippet_end(component__create)
 
 static void alt_entity_register_engines(struct tm_entity_context_o *ctx)
 {
+    // #code_snippet_begin(register_engine)
     tm_component_type_t transform_component = tm_entity_api->lookup_component_type(ctx, TM_TT_TYPE_HASH__TRANSFORM_COMPONENT);
     tm_component_type_t mover_component = tm_entity_api->lookup_component_type(ctx, TM_TT_TYPE_HASH__MOVER_COMPONENT);
     tm_component_type_t movement_component = tm_entity_api->lookup_component_type(ctx, TM_TT_TYPE_HASH__MOVEMENT_COMPONENT);
@@ -83,10 +88,11 @@ static void alt_entity_register_engines(struct tm_entity_context_o *ctx)
         .inst = (tm_engine_o *)ctx,
     };
     tm_entity_api->register_engine(ctx, &movement_engine);
+    // #code_snippet_end(register_engine)
 }
 
 bool player_should_not_walk_anymore = false;
-
+// #code_snippet_begin(engine_update)
 static void my_other_system(tm_engine_o *inst, tm_engine_update_set_t *data, struct tm_entity_commands_o *commands)
 {
     struct tm_entity_context_o *ctx = (struct tm_entity_context_o *)inst;
@@ -105,6 +111,7 @@ static void my_other_system(tm_engine_o *inst, tm_engine_update_set_t *data, str
         }
     }
 }
+// #code_snippet_end(engine_update)
 
 TM_DLL_EXPORT void tm_load_plugin(struct tm_api_registry_api *reg, bool load)
 {

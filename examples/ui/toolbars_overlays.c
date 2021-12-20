@@ -112,7 +112,7 @@ static struct tm_toolbar_i *tab__toolbars(tm_tab_o *tab, tm_temp_allocator_i *ta
     return toolbars;
     // #code_snippet_exclude_end(tab__toolbars)
 }
-// #code_snippet_begin(tab__toolbars)
+// #code_snippet_end(tab__toolbars)
 // #code_snippet_begin(new_vtable)
 static tm_tab_vt *custom_tab_vt_toolbars = &(tm_tab_vt){
     .name = TM_CUSTOM_TAB_VT_NAME,
