@@ -31,7 +31,7 @@ jobs:
       uses: ./tmbuild-action
       id: tmbuild
       with:
-        binary_repository: https://ourmachinery.com/releases/2021.10/the-machinery-2021.11.a-linux.zip
+        binary_repository: https://ourmachinery.com/releases/2021.11/the-machinery-2021.11.a-linux.zip
         mode: Plugin
         config: Debug
         tests: false
