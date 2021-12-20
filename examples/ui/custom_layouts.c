@@ -22,7 +22,7 @@ static struct tm_the_truth_api *tm_the_truth_api;
 
 #define TM_LAYOUT_NAME_HASH TM_STATIC_HASH("my_layout", 0xc1b38d6389074e53ULL)
 #define TM_LAYOUT_NAME "my_layout"
-
+// #code_snippet_begin(create_layout)
 static void create_layout(tm_application_o *app)
 {
     TM_INIT_TEMP_ALLOCATOR(ta);
@@ -44,6 +44,8 @@ static void create_layout(tm_application_o *app)
             return;
         }
     }
+    // #code_snippet_exclude_begin(create_layout)
+    // #code_snippet_begin(tm_tab_layout_t)
     tm_tab_layout_t layout = {
         .split = TM_TAB_LAYOUT_SPLIT_TYPE__HORIZONTAL,
         .bias = 0.25f,
@@ -70,7 +72,8 @@ static void create_layout(tm_application_o *app)
             .right = &(tm_tab_layout_t){.tab = {TM_PREVIEW_TAB_VT_NAME_HASH}},
         },
     };
-
+    // #code_snippet_end(tm_tab_layout_t)
+    // #code_snippet_begin(register)
     const tm_tt_id_t layout_id = tm_the_truth_api->create_object_of_hash(tt, TM_TT_TYPE_HASH__WINDOW_LAYOUT, TM_TT_NO_UNDO_SCOPE);
     tm_the_truth_object_o *layout_w = tm_the_truth_api->write(tt, layout_id);
 
@@ -89,8 +92,11 @@ static void create_layout(tm_application_o *app)
     tm_the_truth_api->set_subobject_id(tt, layout_w, TM_TT_PROP__WINDOW_LAYOUT__TABWELL, tabwell_id, TM_TT_NO_UNDO_SCOPE);
 
     tm_the_truth_api->commit(tt, layout_w, TM_TT_NO_UNDO_SCOPE);
+    // #code_snippet_end(register)
+    // #code_snippet_exclude_end(create_layout)
     TM_SHUTDOWN_TEMP_ALLOCATOR(ta);
 }
+// #code_snippet_end(create_layout)
 
 TM_DLL_EXPORT void tm_load_plugin(struct tm_api_registry_api *reg, bool load)
 {

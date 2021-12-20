@@ -77,7 +77,7 @@ static void tab__destroy(tm_tab_o *tab)
     tm_free(&a, tab, sizeof(*tab));
     tm_allocator_api->destroy_child(&a);
 }
-
+// #code_snippet_begin(vtable)
 static tm_tab_vt *custom_tab_vt = &(tm_tab_vt){
     .name = TM_CUSTOM_TAB_VT_NAME,
     .name_hash = TM_CUSTOM_TAB_VT_NAME_HASH,
@@ -87,17 +87,20 @@ static tm_tab_vt *custom_tab_vt = &(tm_tab_vt){
     .title = tab__title,
     .ui = tab__ui,
 };
+// #code_snippet_end(vtable)
 
 // -- toolbars
-
+// #code_snippet_begin(toolbar__ui)
 static tm_rect_t toolbar__ui(tm_toolbar_i *toolbar, struct tm_ui_o *ui, const struct tm_ui_style_t *uistyle, tm_rect_t toolbar_r, enum tm_toolbar_draw_mode dm)
 {
     // ui code...
     return toolbar_r;
 }
-
+// #code_snippet_end(toolbar__ui)
+// #code_snippet_begin(tab__toolbars)
 static struct tm_toolbar_i *tab__toolbars(tm_tab_o *tab, tm_temp_allocator_i *ta)
 {
+    // #code_snippet_exclude_begin(tab__toolbars)
     struct tm_toolbar_i *toolbars = 0;
     tm_carray_temp_push(toolbars,
                         ((tm_toolbar_i){
@@ -107,8 +110,10 @@ static struct tm_toolbar_i *tab__toolbars(tm_tab_o *tab, tm_temp_allocator_i *ta
                         }),
                         ta);
     return toolbars;
+    // #code_snippet_exclude_end(tab__toolbars)
 }
-
+// #code_snippet_begin(tab__toolbars)
+// #code_snippet_begin(new_vtable)
 static tm_tab_vt *custom_tab_vt_toolbars = &(tm_tab_vt){
     .name = TM_CUSTOM_TAB_VT_NAME,
     .name_hash = TM_CUSTOM_TAB_VT_NAME_HASH,
@@ -119,6 +124,7 @@ static tm_tab_vt *custom_tab_vt_toolbars = &(tm_tab_vt){
     .ui = tab__ui,
     .toolbars = tab__toolbars, // we added this line
 };
+// #code_snippet_end(new_vtable)
 
 TM_DLL_EXPORT void tm_load_plugin(struct tm_api_registry_api *reg, bool load)
 {

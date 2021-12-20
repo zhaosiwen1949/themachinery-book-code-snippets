@@ -234,32 +234,40 @@ static const char *component__category(void)
 
 static tm_ci_editor_ui_i *editor_aspect = &(tm_ci_editor_ui_i){
     .category = component__category};
-
+// #code_snippet_begin(open_asset)
 void open_asset(struct tm_application_o *app, struct tm_ui_o *ui, struct tm_tab_i *from_tab,
                 tm_the_truth_o *tt, tm_tt_id_t asset, enum tm_asset_open_mode open_mode)
 {
-
+    // #code_snippet_begin(tm_docking_find_tab_opt_t)
     const tm_docking_find_tab_opt_t opt = {
         .from_tab = from_tab,
         .in_ui = ui,
         .exclude_pinned = true,
     };
-
+    // #code_snippet_end(tm_docking_find_tab_opt_t)
+    // #code_snippet_begin(open_mode)
     const bool pin = open_mode == TM_ASSET_OPEN_MODE_CREATE_TAB_AND_PIN;
+    // #code_snippet_end(open_mode)
+    // #code_snippet_begin(create_or_select_tab)
     tm_tab_i *tab = tm_the_machinery_api->create_or_select_tab(app, ui, TM_TXT_TAB_VT_NAME, &opt);
-
+    // #code_snippet_end(create_or_select_tab)
+    // #code_snippet_begin(open_mode)
     if (pin)
         tm_docking_api->pin_object(tab, tt, asset);
     else
         tab->vt->set_root(tab->inst, tt, asset);
+    // #code_snippet_end(open_mode)
 }
 
 static tm_asset_open_aspect_i *open_i = &(tm_asset_open_aspect_i){
     .open = open_asset,
 };
+// #code_snippet_end(open_asset)
+// #code_snippet_begin(create_truth_types)
 // -- create truth type
 static void create_truth_types(struct tm_the_truth_o *tt)
 {
+    // #code_snippet_exclude_begin()
     static tm_the_truth_property_definition_t my_asset_properties[] = {
         {"import_path", TM_THE_TRUTH_PROPERTY_TYPE_STRING},
         {"data", TM_THE_TRUTH_PROPERTY_TYPE_BUFFER},
@@ -271,14 +279,17 @@ static void create_truth_types(struct tm_the_truth_o *tt)
     };
     tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__PROPERTIES, &properties_aspect);
     tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__ASSET_SCENE, &scene_api);
+    // #code_snippet_exclude_end()
     tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__ASSET_OPEN, open_i);
-
+    // #code_snippet_exclude_begin()
     tm_the_truth_property_definition_t story_component_properties[] = {
         [TM_TT_PROP__STORY_COMPONENT__ASSET] = {"story_asset", .type = TM_THE_TRUTH_PROPERTY_TYPE_REFERENCE, .type_hash = TM_TT_TYPE_HASH__MY_ASSET}};
     const tm_tt_type_t story_component_type = tm_the_truth_api->create_object_type(tt, TM_TT_TYPE__STORY_COMPONENT, story_component_properties, TM_ARRAY_COUNT(story_component_properties));
     tm_the_truth_api->set_aspect(tt, story_component_type, TM_CI_EDITOR_UI, editor_aspect);
     tm_the_truth_api->set_property_aspect(tt, story_component_type, TM_TT_PROP__STORY_COMPONENT__ASSET, TM_TT_PROP_ASPECT__PROPERTIES__ASSET_PICKER, TM_TT_TYPE__MY_ASSET);
+    // #code_snippet_exclude_end()
 }
+// #code_snippet_end(create_truth_types)
 
 // -- asset browser regsiter interface
 static tm_tt_id_t asset_browser_create(struct tm_asset_browser_create_asset_o *inst, tm_the_truth_o *tt, tm_tt_undo_scope_t undo_scope)
@@ -349,12 +360,13 @@ static void component__create(struct tm_entity_context_o *ctx)
         .manager = (tm_component_manager_o *)story_manager};
     tm_entity_api->register_component(ctx, &component);
 };
-
+// #code_snippet_begin(load_txt_tab)
 extern void load_txt_tab(struct tm_api_registry_api *reg, bool load);
 
 // -- load plugin
 TM_DLL_EXPORT void tm_load_plugin(struct tm_api_registry_api *reg, bool load)
 {
+    // #code_snippet_exclude_begin()
     tm_the_truth_api = tm_get_api(reg, tm_the_truth_api);
     tm_properties_view_api = tm_get_api(reg, tm_properties_view_api);
     tm_os_api = tm_get_api(reg, tm_os_api);
@@ -377,8 +389,12 @@ TM_DLL_EXPORT void tm_load_plugin(struct tm_api_registry_api *reg, bool load)
     // loads the txt tab!
     tm_the_machinery_api = tm_get_api(reg, tm_the_machinery_api);
     tm_docking_api = tm_get_api(reg, tm_docking_api);
+    // #code_snippet_exclude_end()
     load_txt_tab(reg, load);
+    // #code_snippet_exclude_begin()
     tm_add_or_remove_implementation(reg, load, tm_entity_create_component_i, component__create);
     tm_add_or_remove_implementation(reg, load, tm_the_truth_create_types_i, create_truth_types);
     tm_add_or_remove_implementation(reg, load, tm_asset_browser_create_asset_i, &asset_browser_create_my_asset);
+    // #code_snippet_exclude_end()
 }
+// #code_snippet_end(load_txt_tab)
