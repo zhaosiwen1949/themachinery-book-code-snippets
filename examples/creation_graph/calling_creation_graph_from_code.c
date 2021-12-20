@@ -33,7 +33,7 @@ enum
 {
     TM_TT_PROP__CREATION_GRAPH_TEST_COMPONENT__CREATION_GRAPH
 };
-
+// #code_snippet_begin(component)
 typedef struct tm_component_t
 {
     // The truth ID of the creation graph subobject.
@@ -50,6 +50,7 @@ typedef struct tm_component_t
     // The name of the output image.
     tm_strhash_t name;
 } tm_component_t;
+// #code_snippet_end(component)
 
 typedef struct tm_component_manager_o
 {
@@ -65,7 +66,7 @@ typedef struct tm_component_manager_o
 static void shader_ci__init(tm_component_manager_o *manager, const tm_entity_t *entities, const uint32_t *entity_indices, void **data, uint32_t num_components)
 {
     tm_component_t **cdata = (tm_component_t **)data;
-
+    // #code_snippet_begin(init_phase)
     // Create the context for the creation graph, only the bare minimum is defined for this tutorial.
     // This is not production-level code.
     tm_creation_graph_context_t ctx = {
@@ -85,7 +86,8 @@ static void shader_ci__init(tm_component_manager_o *manager, const tm_entity_t *
         // Instantiate the creation graph if this is the first time.
         if (!cur->instance.graph.u64)
             cur->instance = tm_creation_graph_api->create_instance(ctx.tt, cur->creation_graph, &ctx);
-
+        // #code_snippet_exclude_begin()
+        // #code_snippet_begin(query_image)
         // Query the creation graph for image outputs, if non are defined then we skip the update step.
         tm_creation_graph_output_t image_outputs = tm_creation_graph_api->output(&cur->instance, TM_CREATION_GRAPH__IMAGE__OUTPUT_NODE_HASH, &ctx, NULL);
         if (image_outputs.num_output_objects > 0)
@@ -97,7 +99,10 @@ static void shader_ci__init(tm_component_manager_o *manager, const tm_entity_t *
             cur->desc = image_data->desc;
             cur->name = image_data->resource_name;
         }
+        // #code_snippet_end(query_image)
+        // #code_snippet_exclude_end(init_phase)
     }
+    // #code_snippet_end(init_phase)
 }
 
 // This function is called every frame and allows us to update our shader variables.
@@ -105,7 +110,7 @@ static void shader_ci__update(tm_component_manager_o *manager, tm_render_args_t 
                               const struct tm_transform_component_t *transforms, const uint32_t *entity_indices, void **data,
                               uint32_t num_components, const uint8_t *frustum_visibilty)
 {
-
+    // #code_snippet_begin(itr)
     // Loop through all components until we find one that has a valid image output.
     uint32_t i;
     const tm_component_t **cdata = (const tm_component_t **)data;
@@ -133,6 +138,7 @@ static void shader_ci__update(tm_component_manager_o *manager, tm_render_args_t 
     resources->resources[slot].name = cdata[i]->name,
     resources->resources[slot].contents = CONTENT_COLOR_RGB;
     ++resources->num_resources;
+    // #code_snippet_end(itr)
 }
 
 static void create_truth_types(struct tm_the_truth_o *tt)
@@ -142,10 +148,10 @@ static void create_truth_types(struct tm_the_truth_o *tt)
     static tm_ci_shader_i shader_aspect = {
         .init = shader_ci__init,
         .update = shader_ci__update};
-
+    // #code_snippet_begin(gc_asset)
     static const tm_the_truth_property_definition_t properties[] = {
         [TM_TT_PROP__CREATION_GRAPH_TEST_COMPONENT__CREATION_GRAPH] = {"creation_graph", TM_THE_TRUTH_PROPERTY_TYPE_SUBOBJECT, .type_hash = TM_TT_TYPE_HASH__CREATION_GRAPH}};
-
+    // #code_snippet_end(gc_asset)
     const tm_tt_type_t component_type = tm_the_truth_api->create_object_type(tt, TM_TT_TYPE__CREATION_GRAPH_TEST_COMPONENT, properties, TM_ARRAY_COUNT(properties));
     tm_creation_graph_api->create_truth_types(tt);
     tm_the_truth_api->set_default_object_to_create_subobjects(tt, component_type);

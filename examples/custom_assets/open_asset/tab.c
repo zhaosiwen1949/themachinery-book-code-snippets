@@ -19,6 +19,7 @@ static struct tm_localizer_api *tm_localizer_api;
 
 #include "txt.h"
 
+// #code_snippet_begin(tm_tab_o)
 struct tm_tab_o
 {
     tm_tab_i tm_tab_i;
@@ -27,6 +28,7 @@ struct tm_tab_o
     tm_tt_id_t asset;
     tm_the_truth_o *tt;
 };
+// #code_snippet_end(tm_tab_o)
 
 static void tab__ui(tm_tab_o *tab, tm_ui_o *ui, const tm_ui_style_t *uistyle_in, tm_rect_t rect)
 {

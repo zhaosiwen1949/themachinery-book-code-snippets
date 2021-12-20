@@ -38,7 +38,9 @@ static struct tm_scene_common_api *tm_scene_common_api;
 #include <plugins/editor_views/asset_browser.h>
 #include <plugins/editor_views/properties.h>
 #include <plugins/entity/entity.h>
+// #code_snippet_begin(scene_api_def)
 #include <plugins/the_machinery_shared/asset_aspects.h>
+// #code_snippet_end(scene_api_def)
 #include <plugins/the_machinery_shared/component_interfaces/editor_ui_interface.h>
 
 #include <plugins/entity/transform_component.h>
@@ -173,6 +175,7 @@ static float properties__custom_ui(struct tm_properties_ui_args_t *args, tm_rect
     }
     return item_rect.y;
 }
+// #code_snippet_begin(component_custom_ui)
 static float properties__component_custom_ui(struct tm_properties_ui_args_t *args, tm_rect_t item_rect, tm_tt_id_t object, uint32_t indent)
 {
     TM_INIT_TEMP_ALLOCATOR(ta);
@@ -195,12 +198,17 @@ static float properties__component_custom_ui(struct tm_properties_ui_args_t *arg
     TM_SHUTDOWN_TEMP_ALLOCATOR(ta);
     return item_rect.y;
 }
-
+// #code_snippet_end(component_custom_ui)
+// #code_snippet_begin(droppable)
 bool droppable(struct tm_asset_scene_o *inst, struct tm_the_truth_o *tt, tm_tt_id_t asset)
 {
     return true;
 }
-
+// #code_snippet_end(droppable)
+// #code_snippet_begin(create_entity_fn)
+// #code_snippet_begin(create_entity)
+// #code_snippet_begin(create_entity_transform)
+// #code_snippet_begin(create_entity_story)
 tm_tt_id_t create_entity(struct tm_asset_scene_o *inst, struct tm_the_truth_o *tt,
                          tm_tt_id_t asset, const char *name, const tm_transform_t *local_transform,
                          tm_tt_id_t parent_entity, tm_tt_id_t asset_root, struct tm_undo_stack_i *undo_stack)
@@ -210,6 +218,7 @@ tm_tt_id_t create_entity(struct tm_asset_scene_o *inst, struct tm_the_truth_o *t
     const tm_tt_id_t entity = tm_the_truth_api->create_object_of_type(tt, entity_type, undo_scope);
     tm_the_truth_object_o *entity_w = tm_the_truth_api->write(tt, entity);
     tm_the_truth_api->set_string(tt, entity_w, TM_TT_PROP__ENTITY__NAME, name);
+    // #code_snippet_end(create_entity)
     // add transform:
     {
         const tm_tt_type_t transform_component_type = tm_the_truth_api->object_type_from_name_hash(tt, TM_TT_TYPE_HASH__TRANSFORM_COMPONENT);
@@ -218,6 +227,7 @@ tm_tt_id_t create_entity(struct tm_asset_scene_o *inst, struct tm_the_truth_o *t
         tm_the_truth_api->add_to_subobject_set(tt, entity_w, TM_TT_PROP__ENTITY__COMPONENTS, &component_w, 1);
         tm_the_truth_api->commit(tt, component_w, undo_scope);
     }
+    // #code_snippet_end(create_entity_transform)
     // add story:
     {
         tm_tt_type_t asset_type = tm_the_truth_api->object_type_from_name_hash(tt, TM_TT_TYPE_HASH__STORY_COMPONENT);
@@ -227,6 +237,7 @@ tm_tt_id_t create_entity(struct tm_asset_scene_o *inst, struct tm_the_truth_o *t
         tm_the_truth_api->add_to_subobject_set(tt, entity_w, TM_TT_PROP__ENTITY__COMPONENTS, &component_w, 1);
         tm_the_truth_api->commit(tt, component_w, undo_scope);
     }
+    // #code_snippet_end(create_entity_story)
 
     tm_the_truth_api->commit(tt, entity_w, undo_scope);
 
@@ -236,12 +247,14 @@ tm_tt_id_t create_entity(struct tm_asset_scene_o *inst, struct tm_the_truth_o *t
 
     return entity;
 }
-
+// #code_snippet_end(create_entity_fn)
+// #code_snippet_begin(scene_api_def)
 tm_asset_scene_api scene_api = {
     .droppable = droppable,
     .create_entity = create_entity,
 };
-
+// #code_snippet_end(scene_api_def)
+// #code_snippet_begin(comp_meta)
 static const char *component__category(void)
 {
     return TM_LOCALIZE("Story");
@@ -249,8 +262,9 @@ static const char *component__category(void)
 
 static tm_ci_editor_ui_i *editor_aspect = &(tm_ci_editor_ui_i){
     .category = component__category};
-
+// #code_snippet_end(comp_meta)
 // -- create truth type
+// #code_snippet_begin(create_truth_types)
 static void create_truth_types(struct tm_the_truth_o *tt)
 {
     static tm_the_truth_property_definition_t my_asset_properties[] = {
@@ -263,10 +277,16 @@ static void create_truth_types(struct tm_the_truth_o *tt)
         .custom_ui = properties__custom_ui,
     };
     tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__PROPERTIES, &properties_aspect);
-    tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__ASSET_SCENE, &scene_api);
-
+    // #code_snippet_exclude_begin()
+    tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__ASSET_SCENE, &scene_api); // <<---
+    // #code_snippet_exclude_end()
+    // #code_snippet_begin(none_asset_picker)
     tm_the_truth_property_definition_t story_component_properties[] = {
         [TM_TT_PROP__STORY_COMPONENT__ASSET] = {"story_asset", .type = TM_THE_TRUTH_PROPERTY_TYPE_REFERENCE, .type_hash = TM_TT_TYPE_HASH__MY_ASSET}};
+    // #code_snippet_end(none_asset_picker)
+
+    // #code_snippet_exclude_begin()
+    // #code_snippet_begin(story_component)
     static tm_properties_aspect_i properties_component_aspect = {
         .custom_ui = properties__component_custom_ui,
     };
@@ -274,8 +294,10 @@ static void create_truth_types(struct tm_the_truth_o *tt)
     const tm_tt_type_t story_component_type = tm_the_truth_api->create_object_type(tt, TM_TT_TYPE__STORY_COMPONENT, story_component_properties, TM_ARRAY_COUNT(story_component_properties));
     tm_the_truth_api->set_aspect(tt, story_component_type, TM_CI_EDITOR_UI, editor_aspect);
     tm_the_truth_api->set_aspect(tt, story_component_type, TM_TT_ASPECT__PROPERTIES, &properties_component_aspect);
+    // #code_snippet_end(story_component)
+    // #code_snippet_exclude_end()
 }
-
+// #code_snippet_end(create_truth_types)
 // -- asset browser regsiter interface
 static tm_tt_id_t asset_browser_create(struct tm_asset_browser_create_asset_o *inst, tm_the_truth_o *tt, tm_tt_undo_scope_t undo_scope)
 {
@@ -287,13 +309,15 @@ static tm_asset_browser_create_asset_i asset_browser_create_my_asset = {
     .asset_name = TM_LOCALIZE_LATER("New Text File"),
     .create = asset_browser_create,
 };
-
+// #code_snippet_begin(component_def)
+// #code_snippet_begin(component_manager)
 struct tm_component_manager_o
 {
     tm_entity_context_o *ctx;
     tm_allocator_i allocator;
 };
-
+// #code_snippet_end(component_manager)
+// #code_snippet_begin(component__load_asset)
 static bool component__load_asset(tm_component_manager_o *man, struct tm_entity_commands_o *commands, tm_entity_t e, void *c_vp, const tm_the_truth_o *tt, tm_tt_id_t asset)
 {
     struct tm_story_component_t *c = c_vp;
@@ -308,7 +332,8 @@ static bool component__load_asset(tm_component_manager_o *man, struct tm_entity_
     }
     return true;
 }
-
+// #code_snippet_end(component__load_asset)
+// #code_snippet_begin(component__remove_destroy)
 static void component__remove(tm_component_manager_o *manager, struct tm_entity_commands_o *commands, tm_entity_t e, void *data)
 {
     tm_story_component_t *sc = (tm_story_component_t *)data;
@@ -324,7 +349,8 @@ static void component__destroy(tm_component_manager_o *manager)
     tm_free(&allocator, manager, sizeof(tm_component_manager_o));
     tm_entity_api->destroy_child_allocator(ctx, &allocator);
 }
-
+// #code_snippet_end(component__remove_destroy)
+// #code_snippet_begin(component_manager)
 static void component__create(struct tm_entity_context_o *ctx)
 {
     // Allocate a new manager for this component type (freed in component__destroy).
@@ -345,7 +371,9 @@ static void component__create(struct tm_entity_context_o *ctx)
         .manager = (tm_component_manager_o *)story_manager};
     tm_entity_api->register_component(ctx, &component);
 };
-
+// #code_snippet_end(component_manager)
+// #code_snippet_end(component_def)
+// #code_snippet_begin(plugin_load)
 // -- load plugin
 TM_DLL_EXPORT void tm_load_plugin(struct tm_api_registry_api *reg, bool load)
 {
@@ -372,7 +400,9 @@ TM_DLL_EXPORT void tm_load_plugin(struct tm_api_registry_api *reg, bool load)
     tm_add_or_remove_implementation(reg, load, tm_the_truth_create_types_i, create_truth_types);
     tm_add_or_remove_implementation(reg, load, tm_asset_browser_create_asset_i, &asset_browser_create_my_asset);
 }
+// #code_snippet_end(plugin_load)
 
+// #code_snippet_begin(create_truth_types_modify)
 // -- create truth type
 static void create_truth_types_modify(struct tm_the_truth_o *tt)
 {
@@ -383,3 +413,4 @@ static void create_truth_types_modify(struct tm_the_truth_o *tt)
             tm_the_truth_api->set_aspect(tt, asset_type, TM_TT_ASPECT__ASSET_SCENE, &scene_api);
     }
 }
+// #code_snippet_end(create_truth_types_modify)

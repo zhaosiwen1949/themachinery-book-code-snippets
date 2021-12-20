@@ -40,8 +40,10 @@ static float properties__custom_ui(struct tm_properties_ui_args_t *args, tm_rect
     return item_rect.y;
 }
 // -- create truth type
+// #code_snippet_begin(register_aspect)
 static void create_truth_types(struct tm_the_truth_o *tt)
 {
+    // #code_snippet_exclude_begin()
     static tm_the_truth_property_definition_t my_asset_properties[] = {
         {"import_path", TM_THE_TRUTH_PROPERTY_TYPE_STRING},
         {"data", TM_THE_TRUTH_PROPERTY_TYPE_BUFFER},
@@ -51,8 +53,11 @@ static void create_truth_types(struct tm_the_truth_o *tt)
     static tm_properties_aspect_i properties_aspect = {
         .custom_ui = properties__custom_ui,
     };
+    // #code_snippet_exclude_end()
     tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__PROPERTIES, &properties_aspect);
 }
+// #code_snippet_end(register_aspect)
+
 // -- asset browser regsiter interface
 static tm_tt_id_t asset_browser_create(struct tm_asset_browser_create_asset_o *inst, tm_the_truth_o *tt, tm_tt_undo_scope_t undo_scope)
 {

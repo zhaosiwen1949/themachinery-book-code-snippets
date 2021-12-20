@@ -18,18 +18,27 @@ static struct tm_graph_interpreter_api *tm_graph_interpreter_api;
 
 static bool compile_data_to_wire(tm_graph_interpreter_o *gr, uint32_t wire, const tm_the_truth_o *tt, tm_tt_id_t data_id, tm_strhash_t to_type_hash)
 {
+    // #code_snippet_begin(data_id)
     const tm_tt_type_t type = tm_tt_type(data_id);
     const tm_strhash_t type_hash = tm_the_truth_api->type_name_hash(tt, type);
     const tm_the_truth_object_o *data_r = tm_tt_read(tt, data_id);
-
+    // #code_snippet_end(data_id)
+    // #code_snippet_begin(translation)
+    // #code_snippet_begin(compare)
     if (TM_STRHASH_EQUAL(type_hash, TM_TT_TYPE_HASH__ASM_EVENT_REFERENCE) && TM_STRHASH_EQUAL(to_type_hash, TM_TT_TYPE_HASH__STRING_HASH))
+    // #code_snippet_end(compare)
     {
+        // #code_snippet_begin(tt_extract)
         const tm_tt_id_t event_id = tm_the_truth_api->get_reference(tt, data_r, 0);
         const tm_strhash_t event_name_hash = tm_the_truth_api->get_string_hash(tt, tm_tt_read(tt, event_id), TM_TT_PROP__ASM_EVENT__NAME);
+        // #code_snippet_end(tt_extract)
+        // #code_snippet_begin(data_extract)
         tm_strhash_t *v = (tm_strhash_t *)tm_graph_interpreter_api->write_wire(gr, wire, 1, sizeof(*v));
+        // #code_snippet_end(data_extract)
         *v = event_name_hash;
         return true;
     }
+    // #code_snippet_end(translation)
     //...
     return false;
 }
