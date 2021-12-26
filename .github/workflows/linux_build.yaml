@@ -78,6 +78,14 @@ jobs:
         key: ${{ runner.os }}-cache-tm
         restore-keys: |
           ${{ runner.os }}-cache-tm
+    - name: Report
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      if: failure()
   build-samples:
     name: Build Samples
     runs-on: ubuntu-20.04
@@ -122,3 +130,11 @@ jobs:
         mode: Plugin
         config: Debug
         tests: false
+    - name: Report
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      if: failure()
