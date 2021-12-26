@@ -10,7 +10,7 @@ static struct tm_the_truth_api *tm_the_truth_api;
 
 // --- aspects.md
 // #code_snippet_begin(debug_aspect)
-#define TM_TT_ASPECT__DEBUG_PRINT TM_STATIC_HASH("tm_debug_print_aspect_i", 0x39821c78639e0773ULL)
+#define tm_debug_print_aspect_i_hash TM_STATIC_HASH("tm_debug_print_aspect_i", 0x39821c78639e0773ULL)
 
 typedef struct tm_debug_print_aspect_i
 {
@@ -20,7 +20,7 @@ typedef struct tm_debug_print_aspect_i
 // #code_snippet_begin(example_use_case)
 static void example_use_case(tm_the_truth_o *tt, tm_tt_id_t object)
 {
-    tm_debug_print_aspect_i *dp = tm_the_truth_api->get_aspect(tt, tm_tt_type(object), TM_TT_ASPECT__DEBUG_PRINT);
+    tm_debug_print_aspect_i *dp = tm_tt_get_aspect(tt, tm_tt_type(object), tm_debug_print_aspect_i);
     if (dp)
         dp->debug_print(tt, object);
 }

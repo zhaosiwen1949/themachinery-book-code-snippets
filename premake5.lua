@@ -117,7 +117,7 @@ function example_all(folder_name,name)
         kind "SharedLib"
         targetdir "bin/%{cfg.buildcfg}/examples"
         targetname("tm_"..name)
-        defines {"TM_LINKS_" .. string.upper(sn)}
+        defines {"TM_LINKS_" .. string.upper(name)}
         folder{"examples/" .. sn}
 end
 

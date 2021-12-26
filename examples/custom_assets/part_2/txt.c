@@ -23,7 +23,7 @@ static struct tm_os_api *tm_os_api;
 
 //custom ui
 // #code_snippet_begin(custom_ui)
-static float properties__custom_ui(struct tm_properties_ui_args_t *args, tm_rect_t item_rect, tm_tt_id_t object, uint32_t indent)
+static float properties__custom_ui(struct tm_properties_ui_args_t *args, tm_rect_t item_rect, tm_tt_id_t object)
 {
     // #code_snippet_exclude_begin(custom_ui)
     tm_the_truth_o *tt = args->tt;
@@ -66,7 +66,7 @@ static void create_truth_types(struct tm_the_truth_o *tt)
     // #code_snippet_end(register_aspect)
     const tm_tt_type_t type = tm_the_truth_api->create_object_type(tt, TM_TT_TYPE__MY_ASSET, my_asset_properties, TM_ARRAY_COUNT(my_asset_properties));
     // #code_snippet_exclude_end(create_truth_types)
-    tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__FILE_EXTENSION, "txt");
+    tm_tt_set_aspect(tt, type, tm_tt_assets_file_extension_aspect_i, "txt");
     // #code_snippet_exclude_begin(create_truth_types)
     // #code_snippet_begin(custom_ui)
     // #code_snippet_exclude_end(create_truth_types_custom_ui)
@@ -74,7 +74,7 @@ static void create_truth_types(struct tm_the_truth_o *tt)
         .custom_ui = properties__custom_ui,
     };
     // #code_snippet_end(custom_ui)
-    tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__PROPERTIES, &properties_aspect);
+    tm_tt_set_aspect(tt, type, tm_properties_aspect_i, &properties_aspect);
     // #code_snippet_exclude_end(create_truth_types)
 }
 // #code_snippet_end(create_truth_types)

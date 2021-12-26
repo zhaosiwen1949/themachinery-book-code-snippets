@@ -1,0 +1,121 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceRoot}",
+                "${workspaceRoot}/lib/physx-4.1.0-r7-win64/include",
+                "${workspaceRoot}/lib/bearssl-0.6-r1-win64/inc",
+                "${workspaceRoot}/lib/assimp-2020-11-16-win64/include",
+                "${env.TM_SDK_DIR}",
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "TM_LINKS_DCC_ASSET",
+                "TM_LINKS_DEFAULT_RENDER_PIPE",
+                "TM_LINKS_EDITOR_VIEWS",
+                "TM_LINKS_ENTITY",
+                "TM_LINKS_FOUNDATION",
+                "TM_LINKS_GRAPH_INTERPRETER",
+                "TM_LINKS_RENDER_GRAPH",
+                "TM_LINKS_THE_MACHINERY",
+                "TM_LINKS_UI",
+                "TM_LINKS_CREATION_GRAPH",
+                "TM_LINKS_RENDER_UTILITIES",
+                "TM_OS_WINDOWS"
+            ],
+            "intelliSenseMode": "msvc-x64",
+            "browse": {
+                "path": [
+                    "${workspaceRoot}"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        },
+        {
+            "name": "Mac",
+            "includePath": [
+                "/usr/include",
+                "/usr/local/include",
+                "${workspaceRoot}",
+                "${workspaceRoot}/lib/physx-4.1.0-r4-macosx/include",
+                "${workspaceRoot}/lib/bearssl-0.6-macosx/inc"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "TM_LINKS_DCC_ASSET",
+                "TM_LINKS_DEFAULT_RENDER_PIPE",
+                "TM_LINKS_EDITOR_VIEWS",
+                "TM_LINKS_ENTITY",
+                "TM_LINKS_FOUNDATION",
+                "TM_LINKS_GRAPH_INTERPRETER",
+                "TM_LINKS_RENDER_GRAPH",
+                "TM_LINKS_THE_MACHINERY",
+                "TM_LINKS_UI",
+                "TM_LINKS_CREATION_GRAPH",
+                "TM_LINKS_RENDER_UTILITIES",
+                "TM_OS_MACOSX"
+            ],
+            "intelliSenseMode": "clang-x64",
+            "browse": {
+                "path": [
+                    "/usr/include",
+                    "/usr/local/include",
+                    "${workspaceRoot}",
+                    "${workspaceRoot}/lib/physx-4.1.0-r4-macosx/include",
+                    "${workspaceRoot}/lib/bearssl-0.6-macosx/inc"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "macFrameworkPath": [
+                "/System/Library/Frameworks",
+                "/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        },
+        {
+            "name": "Linux",
+            "includePath": [
+                "/usr/include",
+                "/usr/local/include",
+                "${workspaceRoot}"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "TM_LINKS_DCC_ASSET",
+                "TM_LINKS_DEFAULT_RENDER_PIPE",
+                "TM_LINKS_EDITOR_VIEWS",
+                "TM_LINKS_ENTITY",
+                "TM_LINKS_FOUNDATION",
+                "TM_LINKS_GRAPH_INTERPRETER",
+                "TM_LINKS_RENDER_GRAPH",
+                "TM_LINKS_THE_MACHINERY",
+                "TM_LINKS_UI",
+                "TM_LINKS_CREATION_GRAPH",
+                "TM_LINKS_RENDER_UTILITIES",
+                "TM_OS_LINUX"
+            ],
+            "intelliSenseMode": "clang-x64",
+            "browse": {
+                "path": [
+                    "/usr/include",
+                    "/usr/local/include",
+                    "${workspaceRoot}",
+                    "${workspaceRoot}/lib/bearssl-0.6-r1-linux/inc"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
+        }
+    ],
+    "version": 4
+}

@@ -103,7 +103,7 @@ static void triangle_node__compile(tm_creation_graph_interpreter_context_t *ctx,
             strides[TM_VERTEX_SEMANTIC_NORMAL] = sizeof(tm_triangle_vertex_t);
             strides[TM_VERTEX_SEMANTIC_COLOR0] = sizeof(tm_triangle_vertex_t);
 
-            void *cbuf = (void *)&constants;
+            const void *cbuf = (const void *)&constants;
             tm_shader_api->update_constants_raw(io, res_buf, &cbuffer->instance_id, &cbuf, 0, sizeof(tm_shader_vertex_buffer_system_t), 1);
 
             uint32_t pos_buffer_slot, normal_buffer_slot, color_buffer_slot;

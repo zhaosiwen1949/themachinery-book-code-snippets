@@ -156,7 +156,7 @@ static struct tm_asset_io_i txt_asset_io = {
 // -- asset on its own
 
 //custom ui
-static float properties__custom_ui(struct tm_properties_ui_args_t *args, tm_rect_t item_rect, tm_tt_id_t object, uint32_t indent)
+static float properties__custom_ui(struct tm_properties_ui_args_t *args, tm_rect_t item_rect, tm_tt_id_t object)
 {
     tm_the_truth_o *tt = args->tt;
     bool picked = false;
@@ -188,7 +188,7 @@ bool droppable(struct tm_asset_scene_o *inst, struct tm_the_truth_o *tt, tm_tt_i
 
 tm_tt_id_t create_entity(struct tm_asset_scene_o *inst, struct tm_the_truth_o *tt,
                          tm_tt_id_t asset, const char *name, const tm_transform_t *local_transform,
-                         tm_tt_id_t parent_entity, tm_tt_id_t asset_root, struct tm_undo_stack_i *undo_stack)
+                         tm_tt_id_t parent_entity, tm_tt_id_t asset_root, struct tm_undo_stack_i *undo_stack, tm_tt_undo_scope_t parent_undo_scope)
 {
     const tm_tt_undo_scope_t undo_scope = tm_the_truth_api->create_undo_scope(tt, TM_LOCALIZE("Create Entity From Creation Graph"));
     const tm_tt_type_t entity_type = tm_the_truth_api->object_type_from_name_hash(tt, TM_TT_TYPE_HASH__ENTITY);
@@ -273,20 +273,20 @@ static void create_truth_types(struct tm_the_truth_o *tt)
         {"data", TM_THE_TRUTH_PROPERTY_TYPE_BUFFER},
     };
     const tm_tt_type_t type = tm_the_truth_api->create_object_type(tt, TM_TT_TYPE__MY_ASSET, my_asset_properties, TM_ARRAY_COUNT(my_asset_properties));
-    tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__FILE_EXTENSION, "txt");
+    tm_tt_set_aspect(tt, type, tm_tt_assets_file_extension_aspect_i, "txt");
     static tm_properties_aspect_i properties_aspect = {
         .custom_ui = properties__custom_ui,
     };
-    tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__PROPERTIES, &properties_aspect);
-    tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__ASSET_SCENE, &scene_api);
+    tm_tt_set_aspect(tt, type, tm_properties_aspect_i, &properties_aspect);
+    tm_tt_set_aspect(tt, type, tm_asset_scene_api, &scene_api);
     // #code_snippet_exclude_end()
-    tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__ASSET_OPEN, open_i);
+    tm_tt_set_aspect(tt, type, tm_asset_open_aspect_i, open_i);
     // #code_snippet_exclude_begin()
     tm_the_truth_property_definition_t story_component_properties[] = {
         [TM_TT_PROP__STORY_COMPONENT__ASSET] = {"story_asset", .type = TM_THE_TRUTH_PROPERTY_TYPE_REFERENCE, .type_hash = TM_TT_TYPE_HASH__MY_ASSET}};
     const tm_tt_type_t story_component_type = tm_the_truth_api->create_object_type(tt, TM_TT_TYPE__STORY_COMPONENT, story_component_properties, TM_ARRAY_COUNT(story_component_properties));
-    tm_the_truth_api->set_aspect(tt, story_component_type, TM_CI_EDITOR_UI, editor_aspect);
-    tm_the_truth_api->set_property_aspect(tt, story_component_type, TM_TT_PROP__STORY_COMPONENT__ASSET, TM_TT_PROP_ASPECT__PROPERTIES__ASSET_PICKER, TM_TT_TYPE__MY_ASSET);
+    tm_tt_set_aspect(tt, story_component_type, tm_ci_editor_ui_i, editor_aspect);
+    tm_tt_set_property_aspect(tt, story_component_type, TM_TT_PROP__STORY_COMPONENT__ASSET, tm_tt_prop_aspect__properties__asset_picker, TM_TT_TYPE__MY_ASSET);
     // #code_snippet_exclude_end()
 }
 // #code_snippet_end(create_truth_types)

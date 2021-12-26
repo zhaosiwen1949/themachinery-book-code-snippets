@@ -17,7 +17,7 @@ static void create_truth_types(struct tm_the_truth_o *tt)
 {
     // we have properties this is why the last arguments are "0, 0"
     const tm_tt_type_t type = tm_the_truth_api->create_object_type(tt, TM_TT_TYPE__MY_ASSET, 0, 0);
-    tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__FILE_EXTENSION, "my_asset");
+    tm_tt_set_aspect(tt, type, tm_tt_assets_file_extension_aspect_i, "my_asset");
 }
 // #code_snippet_end(create_truth_types)
 // #code_snippet_begin(asset_browser_create)

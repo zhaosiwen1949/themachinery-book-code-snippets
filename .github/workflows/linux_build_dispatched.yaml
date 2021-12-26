@@ -1,6 +1,6 @@
-name: Build Book Samples
+name: Build Book Samples (dispatched)
 
-on: [workflow_dispatch,push]
+on: workflow_dispatch
 
 jobs:
   build-engine:

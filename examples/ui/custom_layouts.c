@@ -8,11 +8,12 @@ static struct tm_the_truth_api *tm_the_truth_api;
 #include <foundation/the_truth.h>
 #include <foundation/carray.inl>
 
-#include <the_machinery/the_machinery.h>
 #include <plugins/ui/layouts.h>
 #include <plugins/ui/ui_icon.h>
+#include <plugins/ui/docking.h>
 
 // tabs:
+#include <the_machinery/the_machinery.h>
 #include <the_machinery/asset_browser_tab.h>
 #include <the_machinery/scene_tab.h>
 #include <the_machinery/preview_tab.h>

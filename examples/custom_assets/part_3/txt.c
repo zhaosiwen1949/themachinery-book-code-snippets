@@ -184,7 +184,7 @@ static struct tm_asset_io_i txt_asset_io = {
 
 //custom ui
 // #code_snippet_begin(custom_ui)
-static float properties__custom_ui(struct tm_properties_ui_args_t *args, tm_rect_t item_rect, tm_tt_id_t object, uint32_t indent)
+static float properties__custom_ui(struct tm_properties_ui_args_t *args, tm_rect_t item_rect, tm_tt_id_t object)
 {
     tm_the_truth_o *tt = args->tt;
     bool picked = false;
@@ -219,11 +219,11 @@ static void create_truth_types(struct tm_the_truth_o *tt)
         {"data", TM_THE_TRUTH_PROPERTY_TYPE_BUFFER},
     };
     const tm_tt_type_t type = tm_the_truth_api->create_object_type(tt, TM_TT_TYPE__MY_ASSET, my_asset_properties, TM_ARRAY_COUNT(my_asset_properties));
-    tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__FILE_EXTENSION, "txt");
+    tm_tt_set_aspect(tt, type, tm_tt_assets_file_extension_aspect_i, "txt");
     static tm_properties_aspect_i properties_aspect = {
         .custom_ui = properties__custom_ui,
     };
-    tm_the_truth_api->set_aspect(tt, type, TM_TT_ASPECT__PROPERTIES, &properties_aspect);
+    tm_tt_set_aspect(tt, type, tm_properties_aspect_i, &properties_aspect);
 }
 
 // -- asset browser regsiter interface
