@@ -19,19 +19,17 @@ jobs:
       TM_OURMACHINERY_COM_DIR: ${{github.workspace}}/doc
     steps:
     - name: Checkout the machinery
-      if: steps.cached-tm.outputs.cache-hit != 'true'
       uses: actions/checkout@v2
       with:
         path: ./the_machinery
         repository: OurMachinery/themachinery
         token: ${{ secrets.TMBUILD_ACTION }}
-        tests: false
     - name: Add msbuild to PATH
       if: ${{ matrix.os != 'ubuntu-20.04'}}
       uses: microsoft/setup-msbuild@v1.0.2
     - name: Setup Container install os dependencies
       if: ${{ matrix.os == 'ubuntu-20.04'}}
-      run: chmod +x ../the_machinery/utils/tests/linux_build_server_setup.sh && bash ../the_machinery/utils/tests/linux_build_server_setup.sh
+      run: chmod +x ./the_machinery/utils/tests/linux_build_server_setup.sh && bash ./the_machinery/utils/tests/linux_build_server_setup.sh
     - name: Checkout tmbuild-action repo
       uses: actions/checkout@v2
       with:
