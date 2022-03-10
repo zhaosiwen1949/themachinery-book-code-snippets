@@ -15,7 +15,7 @@ static struct tm_creation_graph_interpreter_api *tm_creation_graph_interpreter_a
 static void random_node__run(tm_creation_graph_interpreter_context_t *ctx)
 {
     tm_creation_graph_interpreter_wire_content_t max_wire = tm_creation_graph_interpreter_api->read_wire(ctx->instance, ctx->wires[0]);
-    if (!TM_ASSERT(max_wire.n, tm_error_api->def, "Max wire was not connected to random node!"))
+    if (!TM_ASSERT(max_wire.n, "Max wire was not connected to random node!"))
         return;
 
     uint32_t *res = (uint32_t *)tm_creation_graph_interpreter_api->write_wire(ctx->instance, ctx->wires[1], TM_TT_TYPE_HASH__UINT32_T, 1, sizeof(uint32_t));

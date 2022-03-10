@@ -138,7 +138,7 @@ static uint64_t asset_io__import_asset(struct tm_asset_io_o *inst, const char *f
         .args = *args,
     };
     strcpy(task->file, file);
-    return task_system->run_task(task__import_txt, task, "Import Text File");
+    return task_system->run_task(task__import_txt, task, "Import Text File", tm_tt_task_owner(args->tt), false);
 }
 static struct tm_asset_io_i txt_asset_io = {
     .enabled = asset_io__enabled,
@@ -170,7 +170,7 @@ static float properties__custom_ui(struct tm_properties_ui_args_t *args, tm_rect
                     .tt = tt,
                     .reimport_into = object}};
             strcpy(task->file, file);
-            task_system->run_task(task__import_txt, task, "Import Text File");
+            task_system->run_task(task__import_txt, task, "Import Text File", tm_tt_task_owner(args->tt), false);
         }
     }
     return item_rect.y;
@@ -343,7 +343,6 @@ static void component__remove(tm_component_manager_o *manager, struct tm_entity_
 
 static void component__destroy(tm_component_manager_o *manager)
 {
-    tm_entity_api->call_remove_on_all_entities(manager->ctx, tm_entity_api->lookup_component_type(manager->ctx, TM_TT_TYPE_HASH__STORY_COMPONENT));
     // Free the actual manager struct and the allocator used to allocate it.
     tm_entity_context_o *ctx = manager->ctx;
     tm_allocator_i allocator = manager->allocator;

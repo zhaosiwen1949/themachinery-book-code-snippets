@@ -144,7 +144,7 @@ workspace "the-machinery-book-snippets"
     -- buildoptions { "/Bt+", "/d2cgsummary", "/d1reportTime" }
 
 filter { "system:windows" }
-    platforms { "Win64" }
+    platforms { "x64" }
     systemversion("latest")
 
 filter { "system:windows", "options:clang" }
@@ -173,7 +173,7 @@ filter { "system:macosx" }
 filter {"system:linux"}
     platforms { "Linux" }
 
-filter { "platforms:Win64" }
+filter { "platforms:x64" }
     defines { "TM_OS_WINDOWS", "_CRT_SECURE_NO_WARNINGS" }
     staticruntime "On"
     architecture "x64"

@@ -169,7 +169,7 @@ static uint64_t asset_io__import_asset(struct tm_asset_io_o *inst, const char *f
         .args = *args,
     };
     strcpy(task->file, file);
-    return task_system->run_task(task__import_txt, task, "Import Text File");
+    return task_system->run_task(task__import_txt, task, "Import Text File", tm_tt_task_owner(args->tt), false);
 }
 // #code_snippet_end(import_asset)
 static struct tm_asset_io_i txt_asset_io = {
@@ -204,7 +204,7 @@ static float properties__custom_ui(struct tm_properties_ui_args_t *args, tm_rect
                     .tt = tt,
                     .reimport_into = object}};
             strcpy(task->file, file);
-            task_system->run_task(task__import_txt, task, "Import Text File");
+            task_system->run_task(task__import_txt, task, "Import Text File", tm_tt_task_owner(args->tt), false);
         }
         // #code_snippet_end(custom_ui_inner)
     }
