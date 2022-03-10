@@ -1,47 +1,23 @@
 name: Build Book Samples
 
-on: [workflow_dispatch,push]
-
+on: 
+  workflow_dispatch:
+  push:
+  schedule:
+    - cron: "0 12,23 * * 1-5"
 jobs:
   build-engine:
     name: Build Engine
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ [self-hosted, Windows, X64,gpu],ubuntu-20.04]
     env:
       TM_LIB_DIR: ${{github.workspace}}/lib
       TM_SAMPLE_PROJECTS_DIR: ${{github.workspace}}/sample_projects
       TM_SDK_DIR: ${{github.workspace}}/the_machinery/
       TM_OURMACHINERY_COM_DIR: ${{github.workspace}}/doc
     steps:
-    - name: cache tm
-      if: ${{ success() }}
-      id: cached-tm
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/cache
-        key: ${{ runner.os }}-cache-tm
-    - name: Checkout repo
-      if: steps.cached-tm.outputs.cache-hit != 'true'
-      uses: actions/checkout@v2
-      with:
-        path: ./samples
-    - name: Checkout tmbuild-action repo
-      if: steps.cached-tm.outputs.cache-hit != 'true'
-      uses: actions/checkout@v2
-      with:
-        path: tmbuild-action
-        repository: simon-ourmachinery/tmbuild-action
-    - name: Update apt
-      if: steps.cached-tm.outputs.cache-hit != 'true'
-      run: sudo apt update -y
-    - name: Install xlib dependencies
-      if: steps.cached-tm.outputs.cache-hit != 'true'
-      run: sudo apt install -y  xvfb libasound2-dev libxcb-randr0-dev libxcb-util0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-keysyms1-dev libxcb-cursor-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libtinfo5 libminizip1 unzip libxcb-xrm-dev
-    - name: download and install clang and build-essential
-      if: steps.cached-tm.outputs.cache-hit != 'true'
-      run:  sudo apt install build-essential lld clang -y
-    - name: set display env
-      if: steps.cached-tm.outputs.cache-hit != 'true'
-      run: export DISPLAY=:99.0
     - name: Checkout the machinery
       if: steps.cached-tm.outputs.cache-hit != 'true'
       uses: actions/checkout@v2
@@ -50,34 +26,39 @@ jobs:
         repository: OurMachinery/themachinery
         token: ${{ secrets.TMBUILD_ACTION }}
         tests: false
-    - name: Checkout OurMachinery/sample-projects
-      if: steps.cached-tm.outputs.cache-hit != 'true'
+    - name: Add msbuild to PATH
+      if: ${{ matrix.os != 'ubuntu-20.04'}}
+      uses: microsoft/setup-msbuild@v1.0.2
+    - name: Setup Container install os dependencies
+      if: ${{ matrix.os == 'ubuntu-20.04'}}
+      run: chmod +x ../the_machinery/utils/tests/linux_build_server_setup.sh && bash ../the_machinery/utils/tests/linux_build_server_setup.sh
+    - name: Checkout tmbuild-action repo
       uses: actions/checkout@v2
       with:
-        path: sample_projects
-        repository: OurMachinery/sample-projects
-        ref: master
+        path: tmbuild-action
+        repository: simon-ourmachinery/tmbuild-action
     - name: run tmbuild
-      if: steps.cached-tm.outputs.cache-hit != 'true'
       uses: ./tmbuild-action
       id: tmbuild
       with:
         path: ${{github.workspace}}/the_machinery/
         package: release-package.json
     - name: copy tm
-      if: steps.cached-tm.outputs.cache-hit != 'true'
       run: |
         mkdir ${{github.workspace}}/cache
         mv ${{github.workspace}}/the_machinery/build/*.zip ${{github.workspace}}/cache/cache.zip
-    - name: cache tm
-      if: steps.cached-tm.outputs.cache-hit != 'true'
-      id: cache-tm
-      uses: actions/cache@v2
+    - name: FTP Cache
+      uses: simonrenger/ftp-cache@v1
       with:
-        path: ${{github.workspace}}/cache
-        key: ${{ runner.os }}-cache-tm
-        restore-keys: |
-          ${{ runner.os }}-cache-tm
+        host: ${{secrets.CACHE_SERVER }}
+        user: ${{ secrets.CACHE_USER  }}
+        password: ${{ secrets.CACHE_AUTH  }}
+        mode: "Upload"
+        source: ${{github.workspace}}/cache
+        destination: "/upload/caches"
+        archive: true
+        type: "SFTP"
+        archive-name: "sample_test_${{ runner.os}}"
     - name: Report
       uses: 8398a7/action-slack@v3
       with:
@@ -86,9 +67,12 @@ jobs:
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
       if: failure()
-  build-samples:
-    name: Build Samples
-    runs-on: ubuntu-20.04
+  build-sample:
+    name: Build Sample code
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ [self-hosted, Windows, X64,gpu],ubuntu-20.04]
     needs: build-engine
     env:
       TM_LIB_DIR: ${{github.workspace}}/lib
@@ -111,14 +95,18 @@ jobs:
       run: sudo apt install -y  xvfb libasound2-dev libxcb-randr0-dev libxcb-util0-dev libxcb-ewmh-dev libxcb-icccm4-dev libxcb-keysyms1-dev libxcb-cursor-dev libxcb-xkb-dev libxkbcommon-dev libxkbcommon-x11-dev libtinfo5 libminizip1 unzip libxcb-xrm-dev
     - name: download and install clang and build-essential
       run:  sudo apt install build-essential lld clang -y
-    - name: set display env
-      run: export DISPLAY=:99.0
-    - name: cache tm
-      id: cache-tm
-      uses: actions/cache@v2
+    - name: FTP Cache
+      uses: simonrenger/ftp-cache@v1
       with:
-        path: ${{github.workspace}}/cache
-        key: ${{ runner.os }}-cache-tm
+        host: ${{secrets.CACHE_SERVER }}
+        user: ${{ secrets.CACHE_USER  }}
+        password: ${{ secrets.CACHE_AUTH  }}
+        mode: "Download"
+        destination: ${{github.workspace}}/cache/
+        source: "/upload/caches"
+        archive: true
+        type: "SFTP"
+        archive-name: "sample_test_${{ runner.os}}"
     - name: unzip cache
       run: |
         cd ${{github.workspace}}/cache
@@ -138,3 +126,31 @@ jobs:
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
       if: failure()
+  clean-up:
+    if: ${{ always() }}
+    needs: [tmbuild-test,docgen-test]
+    name: cleanup
+    runs-on: [self-hosted, Windows, X64,gpu]
+    steps:
+    - name: FTP Cache
+      uses: simonrenger/ftp-cache@v1
+      with:
+        host: ${{secrets.CACHE_SERVER }}
+        user: ${{ secrets.CACHE_USER  }}
+        password: ${{ secrets.CACHE_AUTH  }}
+        mode: "Remove"
+        type: "SFTP"
+        source: "/upload/caches"
+        archive: true
+        archive-name: "sample_test_Linux"
+    - name: FTP Cache
+      uses: simonrenger/ftp-cache@v1
+      with:
+        host: ${{secrets.CACHE_SERVER }}
+        user: ${{ secrets.CACHE_USER  }}
+        password: ${{ secrets.CACHE_AUTH  }}
+        mode: "Remove"
+        type: "SFTP"
+        source: "/upload/caches"
+        archive: true
+        archive-name: "sample_test_Windows"
