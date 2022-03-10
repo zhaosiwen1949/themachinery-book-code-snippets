@@ -128,7 +128,7 @@ jobs:
       if: failure()
   clean-up:
     if: ${{ always() }}
-    needs: [tmbuild-test,docgen-test]
+    needs: [build-engine,build-sample]
     name: cleanup
     runs-on: [self-hosted, Windows, X64,gpu]
     steps:
